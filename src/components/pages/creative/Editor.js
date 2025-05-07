@@ -12,8 +12,11 @@ import { handleNavigation } from "./editor.util";
 import getSelectedOpbjectType from "../../../redux/actions/navigation";
 import getCanvas from "../../../redux/actions/canvas";
 import {useSelector} from 'react-redux'
+import AnotherComponent from "../../AnotherComponent";
+import { Counter } from "../../CounterComponent";
+import IForm from "../../FromComponent";
 const Editor = () => {
-   
+
   const [selectedField, setSelectedField] = useState("text");
   const canvas = useSelector(state => state.canvas.canvas)
   const _D = useDispatch();
@@ -54,7 +57,7 @@ const Editor = () => {
 
     return () => {
       canvas.off("object:added");
-      canvas.off("mouse:up");
+      canvas.off("mouse:up")
       canvas.off("mouse:wheel");
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -67,6 +70,10 @@ const Editor = () => {
       <Controller selectedField={selectedField} setSelectedField={setSelectedField} animation={animation} />
       <Display canvasRefernence={ref} />
       <Footer animation={animation} setAnimation={setAnimation} />
+      <div>My Components</div>
+      <AnotherComponent/>
+      <Counter/>
+      <IForm/>
     </StyleEditor>
   );
 };
