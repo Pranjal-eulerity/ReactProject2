@@ -12,9 +12,9 @@ import { handleNavigation } from "./editor.util";
 import getSelectedOpbjectType from "../../../redux/actions/navigation";
 import getCanvas from "../../../redux/actions/canvas";
 import {useSelector} from 'react-redux'
-import AnotherComponent from "../../AnotherComponent";
-import { Counter } from "../../CounterComponent";
-import IForm from "../../FromComponent";
+import AnotherComponent from "../../AnotherComponet";
+import { Counter } from "../../CounterCompoent";
+import IForm from "../../FormComponent";
 const Editor = () => {
 
   const [selectedField, setSelectedField] = useState("text");
