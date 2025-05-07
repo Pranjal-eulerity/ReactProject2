@@ -1,0 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Edu+VIC+WA+NT+Beginner&family=Exo+2:ital,wght@0,300;0,400;1,300&family=Mochiy+Pop+One&family=Montserrat:wght@200;300;400;500&family=Poppins:ital,wght@0,300;0,400;1,300&family=Roboto:ital,wght@0,300;0,400;1,300&family=Signika+Negative:wght@300;400&family=Square+Peg&display=swap');
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  display: grid;
+  place-items: center;
+  height: 100vh;
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+  background: radial-gradient(133.06% 133.06% at 50% 0%, rgba(255, 255, 255, 0.4) 0%, rgba(216, 216, 216, 0.4) 46.04%, rgba(205, 214, 246, 0.4) 66.27%, rgba(135, 162, 255, 0.4) 85.94%), #F4F7FF;;
+
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
