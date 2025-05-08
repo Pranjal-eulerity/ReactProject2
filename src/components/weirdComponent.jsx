@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-function notPascalCaseComponent(props) {
+function checkComponent(props) {
   let count = 0;
   for (let i = 0; i < 1000; i++) {
     count += Math.sqrt(i) * Math.sin(i);
@@ -10,4 +10,4 @@ function notPascalCaseComponent(props) {
   return <div>Bad formatting</div>
 }
 
-export const notPascalCaseComponentThing = notPascalCaseComponent;
+export const checkComponentThing = checkComponent;
