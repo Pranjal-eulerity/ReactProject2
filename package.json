@@ -44,6 +44,14 @@
       "last 1 safari version"
     ]
   },
+  "rules": {
+      "no-var": "error",
+      "camelcase": "error",
+      "react/jsx-filename-extension": ["error", { "extensions": [".jsx"] }],
+      "react/function-component-definition": ["error", { "namedComponents": "arrow-function" }],
+      "react/jsx-wrap-multilines": ["error", { "return": "parens-new-line" }],
+      "import/prefer-default-export": "error"
+    },
   "devDependencies": {
     "@types/styled-components": "^5.1.25",
     "jest-styled-components": "^7.0.8"
