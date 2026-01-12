@@ -3,7 +3,7 @@ import { GET_CANVAS } from "../types"
 const initialState = {
     canvas: null
 }
-
+// adding comment
 const navigateReducer = (state = initialState, action) => {
     switch (action.type) {
         case GET_CANVAS: {
