@@ -2,63 +2,100 @@ name: Auto Label Copilot PRs
 
 on:
   pull_request:
-    types: [opened, edited, reopened]
+    types: [opened, edited, reopened, synchronize]
 
 permissions:
   issues: write
   pull-requests: write
+  contents: read
 
 jobs:
   label:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Add labels if source branch starts with copilot/ and target is main
+      - name: Auto label PRs
         uses: actions/github-script@v7
         with:
           script: |
-            const sourceBranch = context.payload.pull_request.head.ref;
-            const targetBranch = context.payload.pull_request.base.ref;
-            const issueNumber = context.payload.pull_request.number;
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const pr = context.payload.pull_request;
+            const issueNumber = pr.number;
 
-            console.log("Source branch:", sourceBranch);
-            console.log("Target branch:", targetBranch);
+            console.log("PR #", issueNumber);
 
-            const isCopilotSource = sourceBranch.toLowerCase().startsWith("copilot/");
-            const isMergingIntoMain = targetBranch === "main";
+            // --------------------------------------------------
+            // 1. Always add "S - 1st review"
+            // --------------------------------------------------
+            const BASE_LABELS = ["S - 1st review"];
 
-            if (!isCopilotSource || !isMergingIntoMain) {
-              console.log("⏭️ Conditions not met, skipping");
-              return;
+            // --------------------------------------------------
+            // 2. Check if experimentHelper.ts had net line reduction
+            // --------------------------------------------------
+            const files = await github.paginate(
+              github.rest.pulls.listFiles,
+              {
+                owner,
+                repo,
+                pull_number: issueNumber,
+                per_page: 100,
+              }
+            );
+
+            let isExperimentCleanup = false;
+
+            for (const file of files) {
+              if (file.filename.endsWith("experimentHelper.ts")) {
+                console.log("Found experimentHelper.ts");
+                console.log("Additions:", file.additions, "Deletions:", file.deletions);
+
+                if (file.deletions > file.additions) {
+                  console.log("Net line reduction detected ");
+                  isExperimentCleanup = true;
+                } else {
+                  console.log("No net reduction ");
+                }
+              }
             }
 
-            const desiredLabels = [
-              "C - exp cleanup",
-              "S - 1st review"
-            ];
+            const desiredLabels = [...BASE_LABELS];
 
-            const { data: existingLabels } = await github.rest.issues.listLabelsOnIssue({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: issueNumber,
-            });
+            if (isExperimentCleanup) {
+              desiredLabels.push("C - exp cleanup");
+            }
 
-            const existingNames = existingLabels.map(label => label.name);
+            console.log("Desired labels:", desiredLabels);
+
+            // --------------------------------------------------
+            // 3. Read existing labels
+            // --------------------------------------------------
+            const { data: existingLabels } =
+              await github.rest.issues.listLabelsOnIssue({
+                owner,
+                repo,
+                issue_number: issueNumber,
+              });
+
+            const existingNames = existingLabels.map(l => l.name);
 
             const labelsToAdd = desiredLabels.filter(
               label => !existingNames.includes(label)
             );
 
             if (labelsToAdd.length === 0) {
-              console.log("Labels already present, nothing to add");
+              console.log("No new labels to add 💤");
               return;
             }
 
+            // --------------------------------------------------
+            // 4. Apply labels
+            // --------------------------------------------------
             await github.rest.issues.addLabels({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
+              owner,
+              repo,
               issue_number: issueNumber,
-              labels: labelsToAdd
+              labels: labelsToAdd,
             });
 
             console.log(" Added labels:", labelsToAdd.join(", "));
