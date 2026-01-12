@@ -31,7 +31,7 @@ jobs:
             const BASE_LABELS = ["S - 1st review"];
 
             // --------------------------------------------------
-            // 2. Check if experimentHelper.ts had net line reduction
+            // 2. Check if experimentHelper.js had net line reduction
             // --------------------------------------------------
             const files = await github.paginate(
               github.rest.pulls.listFiles,
@@ -46,8 +46,8 @@ jobs:
             let isExperimentCleanup = false;
 
             for (const file of files) {
-              if (file.filename.endsWith("experimentHelper.ts")) {
-                console.log("Found experimentHelper.ts");
+              if (file.filename.endsWith("experimentHelper.js")) {
+                console.log("Found experimentHelper.js");
                 console.log("Additions:", file.additions, "Deletions:", file.deletions);
 
                 if (file.deletions > file.additions) {
