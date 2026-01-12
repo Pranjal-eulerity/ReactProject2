@@ -4,6 +4,10 @@ on:
   pull_request:
     types: [opened, edited, reopened]
 
+permissions:
+  issues: write
+  pull-requests: write
+
 jobs:
   label:
     runs-on: ubuntu-latest
@@ -46,7 +50,7 @@ jobs:
             );
 
             if (labelsToAdd.length === 0) {
-              console.log("✅ Labels already present, nothing to add");
+              console.log("Labels already present, nothing to add");
               return;
             }
 
@@ -57,4 +61,4 @@ jobs:
               labels: labelsToAdd
             });
 
-            console.log("🚀 Added labels:", labelsToAdd.join(", "));
+            console.log(" Added labels:", labelsToAdd.join(", "));
