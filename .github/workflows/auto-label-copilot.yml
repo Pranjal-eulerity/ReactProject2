@@ -17,7 +17,7 @@ jobs:
 
             console.log("Target branch:", baseBranch);
 
-            if (baseBranch.toLowerCase().startsWith("co-pilot/")) {
+            if (baseBranch.toLowerCase().startsWith("copilot/")) {
               await github.rest.issues.addLabels({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
@@ -28,7 +28,7 @@ jobs:
                 ]
               });
 
-              console.log("✅ Labels added because base branch matches co-pilot/");
+              console.log("✅ Labels added because base branch matches copilot/");
             } else {
-              console.log("⏭️ Base branch does not match co-pilot/, skipping");
+              console.log("⏭️ Base branch does not match copilot/, skipping");
             }
