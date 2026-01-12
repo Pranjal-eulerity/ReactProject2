@@ -1,4 +1,4 @@
-name: Auto Label Copilot PRs
+name: Auto Label co-pilot Target Branch PRs
 
 on:
   pull_request:
@@ -9,13 +9,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Add labels if PR title starts with copilot/
+      - name: Add labels if base branch starts with co-pilot/
         uses: actions/github-script@v7
         with:
           script: |
-            const prTitle = context.payload.pull_request.title;
+            const baseBranch = context.payload.pull_request.base.ref;
 
-            if (prTitle.toLowerCase().startsWith("copilot/")) {
+            console.log("Target branch:", baseBranch);
+
+            if (baseBranch.toLowerCase().startsWith("co-pilot/")) {
               await github.rest.issues.addLabels({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
@@ -26,7 +28,7 @@ jobs:
                 ]
               });
 
-              console.log("✅ Labels added to copilot PR");
+              console.log("✅ Labels added because base branch matches co-pilot/");
             } else {
-              console.log("⏭️ Not a copilot PR, skipping");
+              console.log("⏭️ Base branch does not match co-pilot/, skipping");
             }
