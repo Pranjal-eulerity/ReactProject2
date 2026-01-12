@@ -1,4 +1,4 @@
-name: Auto Label co-pilot Target Branch PRs
+name: Auto Label Copilot PRs
 
 on:
   pull_request:
@@ -9,26 +9,35 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Add labels if base branch starts with copilot/
+      - name: Add labels if source branch starts with copilot/ and target is main
         uses: actions/github-script@v7
         with:
           script: |
-            const baseBranch = context.payload.pull_request.base.ref;
+            const sourceBranch = context.payload.pull_request.head.ref;
+            const targetBranch = context.payload.pull_request.base.ref;
+            const issueNumber = context.payload.pull_request.number;
 
-            console.log("Target branch:", baseBranch);
+            console.log("Source branch:", sourceBranch);
+            console.log("Target branch:", targetBranch);
 
-            if (baseBranch.toLowerCase().startsWith("copilot/")) {
-              await github.rest.issues.addLabels({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: context.payload.pull_request.number,
-                labels: [
-                  "C - exp cleanup",
-                  "S - 1st review"
-                ]
-              });
+            const isCopilotSource = sourceBranch.toLowerCase().startsWith("copilot/");
+            const isMergingIntoMain = targetBranch === "main";
 
-              console.log("✅ Labels added because base branch matches copilot/");
-            } else {
-              console.log("⏭️ Base branch does not match copilot/, skipping");
+            if (!isCopilotSource || !isMergingIntoMain) {
+              console.log("⏭️ Conditions not met, skipping");
+              return;
             }
+
+            const desiredLabels = [
+              "C - exp cleanup",
+              "S - 1st review"
+            ];
+
+            const { data: existingLabels } = await github.rest.issues.listLabelsOnIssue({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber,
+            });
+
+            const existingNames = existingLabels.map(label => label.name);
+            const labelsToAdd = des
