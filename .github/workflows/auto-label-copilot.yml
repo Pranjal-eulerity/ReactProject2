@@ -1,0 +1,32 @@
+name: Auto Label Copilot PRs
+
+on:
+  pull_request:
+    types: [opened, edited, reopened]
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Add labels if PR title starts with copilot/
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const prTitle = context.payload.pull_request.title;
+
+            if (prTitle.toLowerCase().startsWith("copilot/")) {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.pull_request.number,
+                labels: [
+                  "C - exp cleanup",
+                  "S - 1st review"
+                ]
+              });
+
+              console.log("✅ Labels added to copilot PR");
+            } else {
+              console.log("⏭️ Not a copilot PR, skipping");
+            }
