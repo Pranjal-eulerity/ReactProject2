@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Add labels if base branch starts with co-pilot/
+      - name: Add labels if base branch starts with copilot/
         uses: actions/github-script@v7
         with:
           script: |
