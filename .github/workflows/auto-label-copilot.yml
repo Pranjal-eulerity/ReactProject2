@@ -40,4 +40,21 @@ jobs:
             });
 
             const existingNames = existingLabels.map(label => label.name);
-            const labelsToAdd = des
+
+            const labelsToAdd = desiredLabels.filter(
+              label => !existingNames.includes(label)
+            );
+
+            if (labelsToAdd.length === 0) {
+              console.log("✅ Labels already present, nothing to add");
+              return;
+            }
+
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber,
+              labels: labelsToAdd
+            });
+
+            console.log("🚀 Added labels:", labelsToAdd.join(", "));
